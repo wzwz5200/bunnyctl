@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0E1513">
+<title>BUNNY DSP</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="brand">
+      <span class="brand-mark">∿</span>
+      <div class="brand-text">
+        <h1>BUNNY DSP</h1>
+        <p id="deviceLine">KT0211L · 5 段参数均衡</p>
+      </div>
+    </div>
+
+    <div class="status-chip" id="statusBox" role="status">
+      <span class="dot" id="dot"></span>
+      <span id="statusText">连接中…</span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="card card-graph">
+    <div class="card-head">
+      <div class="segmented" role="tablist" aria-label="通道">
+        <button class="seg-btn active" data-bank="dac" role="tab" aria-selected="true">
+          <svg class="seg-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+          耳机 DAC
+        </button>
+        <button class="seg-btn" data-bank="adc" role="tab" aria-selected="false">
+          <svg class="seg-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+          麦克风 ADC
+        </button>
+      </div>
+
+      <div class="head-tools">
+        <span class="chip-assist hidden" id="unsaved">未写入耳机</span>
+        <label class="switch" aria-label="EQ 启用">
+          <input type="checkbox" id="eqEnabled" checked>
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </label>
+        <span class="switch-label">EQ</span>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="curve"></canvas>
+    </div>
+
+    <div class="support">
+      <span><b>拖动</b> 圆点改频率 / 增益</span>
+      <span><b>滚轮</b> 调 Q</span>
+      <span><b>双击</b> 增益归零</span>
+      <span class="grow"></span>
+      <span id="cursorFreq" class="mono"></span>
+    </div>
+  </section>
+
+  <aside class="side">
+
+    <section class="card">
+      <h2 class="card-title">预设</h2>
+      <div class="chips" id="presets"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">滤波器 <span class="muted">5 段</span></h2>
+      <div class="bands" id="bands"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">数字前级</h2>
+      <div class="slider-row">
+        <input type="range" id="preamp" min="-12" max="6" step="0.5" value="0" aria-label="数字前级">
+        <output id="preampVal" class="mono">0.0 dB</output>
+      </div>
+      <p class="support-text">作用在 DAC 数字增益 (0x66)，用来补回 EQ 削掉的音量。</p>
+    </section>
+
+    <section class="card actions-card">
+      <button id="btnRead" class="btn btn-tonal">从耳机读取</button>
+      <button id="btnSave" class="btn btn-filled" disabled>存到耳机</button>
+      <button id="btnFactory" class="btn btn-outlined btn-error">恢复出厂</button>
+      <p class="support-text"><span class="mono" id="versionTag">bunny-dsp</span> · 「存到耳机」把当前状态写进耳机 flash (0x53)，之后插到任何电脑都是这套调音。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">导入 AutoEq</h2>
+      <label class="tf tf-area">
+        <span class="tf-label">曲线文本 / JSON</span>
+        <textarea id="autoeq" rows="4" spellcheck="false"
+          placeholder="Preamp: -6.0 dB&#10;Filter 1: ON PK Fc 105 Hz Gain 5.5 dB Q 0.70&#10;Filter 2: ON PK Fc 3000 Hz Gain -2.0 dB Q 1.2"></textarea>
+      </label>
+      <div class="io-row">
+        <button id="btnImport" class="btn btn-outlined">导入曲线</button>
+        <button id="btnExport" class="btn btn-text">导出 JSON</button>
+      </div>
+      <p class="support-text">粘贴 AutoEq / squig.link 的 PEQ 文本，或载入本工具导出的 JSON。</p>
+    </section>
+
+  </aside>
+</main>
+
+<div id="toast" class="snackbar" role="status" aria-live="polite"></div>
+<script src="/app.js"></script>
+</body>
+</html>

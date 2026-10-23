@@ -1,0 +1,7 @@
+/bunny-dsp
+/ktweb
+*.log
+*.tmp
+__pycache__/
+*.pyc
+.DS_Store
