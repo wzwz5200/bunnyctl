@@ -20,7 +20,7 @@ TANCHJIM（天使吉米）的 BUNNY（兔几）有一条 USB-C「DSP 版」，�
 需要 **Linux** + **Go 1.22+**。
 
 ```bash
-git clone git@github.com:wzwz5200/bunnyctl-.git
+git clone https://github.com/wzwz5200/bunnyctl-.git
 cd bunnyctl-
 ./install.sh
 ```
