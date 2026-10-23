@@ -160,41 +160,19 @@ flash.bin  262144 字节
 
 ## 7. 工具
 
-`tools/ktdsp.py`（纯标准库，走 hidraw，不需要 hidapi/numpy）：
-
 ```bash
-./tools/ktdsp.py info                       # 身份 + 固件版本
-./tools/ktdsp.py dump -o regdump.json       # 256 个寄存器全量导出
-./tools/ktdsp.py eq                         # 读 DAC EQ
-./tools/ktdsp.py eq --bank adc              # 读 ADC(麦克风) EQ
-./tools/ktdsp.py eq --set '0:30,4.0,0.7,PK' --set '1:200,-3,0.5,PK'
-./tools/ktdsp.py eq --disable               # 关掉整个 EQ 链路
-./tools/ktdsp.py vol                        # PGA + 数字增益
-./tools/ktdsp.py drc                        # 噪声门 / 限幅器
-./tools/ktdsp.py raw 0x24                   # 原始寄存器读
-./tools/ktdsp.py raw 0x24 0                 # 原始寄存器写
-./tools/ktdsp.py save --yes                 # 0x53 固化到 flash（设备会重启）
-./tools/ktdsp.py eq --plot dac.svg          # 画当前 EQ 的幅频响应
+./tools/ktdsp.py info|vol|drc|eq|dump|raw <addr> [value]|save --yes   # CLI 调音
+./tools/ktdump.py --check                                            # 探测 flash
+./tools/ktdump.py -o flash.bin                                       # 整片备份，可续传
+make run                                                             # Web 调音台
 ```
 
-`bunnyctl`（本仓库，Web 调音台）：
-
-```bash
-make run   # http://127.0.0.1:8099
-```
-
-`tools/ktdump.py`（固件 dump）：
-
-```bash
-./tools/ktdump.py --check                   # 先探几个对齐地址
-./tools/ktdump.py -o flash.bin              # 全片 256 KiB，可断点续传
-```
-
-访问权限：已写入 `/etc/udev/rules.d/99-bunnyctl.rules`，给 `31b2:*` 的 hidraw 加了 `plugdev` 组权限和 `/dev/bunnyctl` 软链接，普通用户可直连。
+udev 规则在 `/etc/udev/rules.d/99-bunnyctl.rules`，给 `31b2:*` 的 hidraw 开了 `plugdev` 权限，
+并建了 `/dev/bunnyctl` 软链。
 
 ## 8. 安全边界
 
-- 改 EQ / 音量 / DRC / USB 字符串都是 RAM 操作，拔插即恢复出厂；`0x53` 才会写 flash。
-- 写 `0x5B`（VID:PID）会让设备以新 ID 重枚举，写错会“消失”；有 udev 规则时可救，但没把握别动。
-- `0x54` + `"12345678"` 进 CDC 后，**没有镜像就不要乱烧**：引导器没有读回命令，烧错只能靠 SWD 救。
-- `0x08` 非对齐地址 = 死机，必须物理拔插。
+- EQ / 音量 / DRC / USB 字符串都是 RAM 操作，拔插即恢复；只有 `0x53` 写 flash。
+- 写 `0x5B`（VID:PID）会让设备以新 ID 重枚举，没把握别动。
+- 进 CDC 引导模式后**没有刷写镜像就不要烧**，引导器没有读回命令，烧错只能靠 SWD 救。
+- `0x08` 非对齐地址会让固件挂起，必须物理拔插。
