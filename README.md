@@ -9,25 +9,14 @@
 
 ## 背景
 
-[TANCHJIM（天使吉米）](https://tanchjim.com/) 是国内做入耳式耳机的厂牌。
-**BUNNY（兔几）** 是它家的入门单动圈：双腔体动圈、DMT 4 Ultra、30 Ω / 123 dB/Vrms，
-3.5 mm 版和 USB-C「DSP 版」两条产品线，DSP 版贵 10 块钱
-（[官方产品页](https://tanchjim.com/products/earphones/iem/bunny/)）。
+TANCHJIM（天使吉米）的 BUNNY（兔几）有一条 USB-C「DSP 版」，调音靠官方 App。
 
-贵出来的这部分在线材里：USB-C 插头内集成双路 24-bit DAC、微型耳放、低噪声麦克风电路
-和一颗 DSP，支持 44.1 / 48 / 96 kHz 输出、麦克风 24-bit/96 kHz 输入。
-调音靠官方 App —— 5 段参数均衡、四组预设、游戏音效，还能把自定义曲线传到社区。
+官方客户端只覆盖 Android、iOS 和 Windows（[下载中心](https://tanchjim.com/services/) 里是
+`TANCHJIM APP` 和 `TANCHJIM PC`），**没有 Linux 版，也没有公开的协议或驱动**。
+于是 Linux 用户要么借一台安卓手机调音，要么就只能听出厂曲线。
 
-问题在于：**官方客户端只覆盖 Android、iOS 和 Windows**
-（[下载中心](https://tanchjim.com/services/) 里是 `TANCHJIM APP` 和 `TANCHJIM PC`），
-**没有 Linux 版，也没有公开的协议或驱动**。于是 Linux 用户要么借一台安卓手机调音，
-要么就只能听出厂曲线。
-
-这个项目补的就是这块：把这条线的 HID 控制通道逆向出来
-（[协议笔记](docs/PROTOCOL.md)），做成一个本地 Web 控制台 ——
-不用装驱动、不用手机，浏览器打开就能调，调完写进耳机，之后插到哪台设备都生效。
-
-> 顺便说明：官方 App 的功能这里都有，另外多了任意 AutoEq 曲线导入、JSON 备份和寄存器级调试。
+这个项目补的就是这块：把这条线的 HID 控制通道逆向出来（[协议笔记](docs/PROTOCOL.md)），
+做成一个本地 Web 控制台 —— 不用装驱动、不用手机，浏览器打开就能调，调完写进耳机。
 
 ## 它做什么
 
