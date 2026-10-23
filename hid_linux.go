@@ -51,21 +51,33 @@ func (c *hidConn) Read(buf []byte, timeout time.Duration) (int, error) {
 }
 
 func waitReadable(fd uintptr, timeout time.Duration) error {
-	var rfds syscall.FdSet
-	idx := fd / 64
-	if idx >= uintptr(len(rfds.Bits)) {
-		return errors.New("文件描述符超出 select 范围")
+	// Go's runtime uses signals (SIGURG) for preemption, which can interrupt
+	// select(2) with EINTR at any time — retry instead of failing the request.
+	deadline := time.Now().Add(timeout)
+	for {
+		remain := time.Until(deadline)
+		if remain < 0 {
+			return errTimeout
+		}
+		var rfds syscall.FdSet
+		idx := fd / 64
+		if idx >= uintptr(len(rfds.Bits)) {
+			return errors.New("文件描述符超出 select 范围")
+		}
+		rfds.Bits[idx] |= 1 << (fd % 64)
+		tv := syscall.NsecToTimeval(remain.Nanoseconds())
+		n, err := syscall.Select(int(fd)+1, &rfds, nil, nil, &tv)
+		if err == syscall.EINTR {
+			continue
+		}
+		if err != nil {
+			return err
+		}
+		if n == 0 {
+			return errTimeout
+		}
+		return nil
 	}
-	rfds.Bits[idx] |= 1 << (fd % 64)
-	tv := syscall.NsecToTimeval(timeout.Nanoseconds())
-	n, err := syscall.Select(int(fd)+1, &rfds, nil, nil, &tv)
-	if err != nil {
-		return err
-	}
-	if n == 0 {
-		return errTimeout
-	}
-	return nil
 }
 
 // hidPaths lists hidraw nodes belonging to the KT vendor id.
