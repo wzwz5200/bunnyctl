@@ -230,10 +230,15 @@ func handlePresets(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleHealth(w http.ResponseWriter, r *http.Request) {
+	// actually probe the dongle so "connected" reflects the hardware, not just
+	// whether some earlier request happened to open the handle
+	info, err := dev.DeviceInfo()
 	writeJSON(w, http.StatusOK, map[string]any{
 		"ok":        true,
 		"version":   version,
-		"connected": dev.Connected(),
+		"connected": err == nil,
+		"device":    info.Product,
+		"error":     dev.LastError(),
 	})
 }
 
