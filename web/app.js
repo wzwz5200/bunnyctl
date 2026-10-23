@@ -727,7 +727,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function refreshAll() {
   try {
     const st = await api('/api/status');
-    if (st.version) $('versionTag').textContent = 'bunny-dsp ' + st.version;
+    if (st.version) $('versionTag').textContent = 'usagi ' + st.version;
     setConnected(st.connected, st.info);
     if (st.connected && st.preamp) {
       state.savedPreamp = st.preamp.l;

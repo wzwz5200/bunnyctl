@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BIN_NAME="bunny-dsp"
+BIN_NAME="usagi"
 PREFIX="${PREFIX:-$HOME/.local}"
 UNIT_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
-UDEV_RULE="/etc/udev/rules.d/99-ktmicro-dsp.rules"
+UDEV_RULE="/etc/udev/rules.d/99-usagi.rules"
 
 info() { printf '\033[1;36m==>\033[0m %s\n' "$*"; }
 
-if systemctl --user list-unit-files 2>/dev/null | grep -q '^bunny-dsp.service'; then
+if systemctl --user list-unit-files 2>/dev/null | grep -q '^usagi.service'; then
   info "停止并禁用服务"
-  systemctl --user disable --now bunny-dsp.service || true
+  systemctl --user disable --now usagi.service || true
 fi
 
 info "删除 systemd 单元"
-rm -f "$UNIT_DIR/bunny-dsp.service"
+rm -f "$UNIT_DIR/usagi.service"
 systemctl --user daemon-reload 2>/dev/null || true
 
 info "删除二进制"

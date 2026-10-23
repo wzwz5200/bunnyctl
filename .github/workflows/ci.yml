@@ -18,6 +18,6 @@ jobs:
       - name: test
         run: go test ./... -count=1
       - name: build
-        run: CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version=${{ github.sha }}" -o bunny-dsp .
+        run: CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version=${{ github.sha }}" -o usagi .
       - name: cross-build (stub transport)
-        run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o /tmp/bunny-dsp.exe .
+        run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o /tmp/usagi.exe .

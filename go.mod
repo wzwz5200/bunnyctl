@@ -1,3 +1,3 @@
-module bunnydsp
+module usagi
 
 go 1.22

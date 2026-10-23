@@ -1,4 +1,4 @@
 # TANCHJIM BUNNY DSP / KTMicro KT0211L — allow non-root HID access
-SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31b2", ATTRS{idProduct}=="1112", MODE="0660", GROUP="plugdev", TAG+="uaccess", SYMLINK+="ktdsp"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31b2", ATTRS{idProduct}=="1112", MODE="0660", GROUP="plugdev", TAG+="uaccess", SYMLINK+="usagi"
 SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31b2", MODE="0660", GROUP="plugdev", TAG+="uaccess"
 SUBSYSTEM=="usb", ATTRS{idVendor}=="31b2", ATTRS{idProduct}=="1112", MODE="0660", GROUP="plugdev", TAG+="uaccess"

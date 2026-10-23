@@ -1,4 +1,4 @@
-BINARY  := bunny-dsp
+BINARY  := usagi
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo 0.1.0)
 LDFLAGS := -s -w -X main.version=$(VERSION)
 
