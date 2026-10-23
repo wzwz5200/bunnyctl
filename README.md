@@ -27,33 +27,38 @@ MD3 switch/slider、state layer + ripple、snackbar）。
 ```bash
 git clone <this-repo> bunny-dsp
 cd bunny-dsp
-make run          # 编译并启动，自动打开 http://127.0.0.1:8099
+./install.sh
 ```
 
-第一次用如果提示没权限读 `/dev/hidraw*`，装一下 udev 规则（一条命令，需要 sudo）：
+安装脚本会：编译 → 装到 `~/.local/bin/bunny-dsp` → 装 udev 规则（需要 sudo 密码）→
+装并启动 systemd 用户服务，最后打印地址。**浏览器不会自动弹出**，自己打开
+<http://127.0.0.1:8099> 即可；插拔一次耳机、刷新页面就能用。
+
+```bash
+systemctl --user status bunny-dsp    # 运行状态
+journalctl --user -u bunny-dsp -f    # 日志
+./uninstall.sh                       # 卸载
+```
+
+### 只想临时跑一下（不装进系统）
+
+```bash
+make run     # 编译并在前台启动，自己访问打印出来的地址
+```
+
+首次运行若报无权限读 `/dev/hidraw*`，手动装一次 udev 规则：
 
 ```bash
 sudo install -m 0644 99-ktmicro-dsp.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger --subsystem-match=hidraw
 ```
 
-插拔一次耳机，刷新页面即可。
-
-### 一条命令装好（含开机自启）
-
-```bash
-./install.sh
-```
-
-它会：编译 → 装到 `~/.local/bin/bunny-dsp` → 装 udev 规则 → 装并启动 systemd 用户服务
-（`systemctl --user status bunny-dsp`）。卸载：`./uninstall.sh`。
-
 ### 手动构建
 
 ```bash
-make build                 # 产出 ./bunny-dsp
-./bunny-dsp                # 默认 127.0.0.1:8099
-./bunny-dsp -addr 0.0.0.0:8099 -open   # 局域网可访问，并自动开浏览器
+make build                              # 产出 ./bunny-dsp
+./bunny-dsp                             # 默认 127.0.0.1:8099
+./bunny-dsp -addr 0.0.0.0:8099          # 局域网可访问
 ./bunny-dsp -version
 ```
 

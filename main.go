@@ -8,8 +8,6 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
-	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -239,19 +237,6 @@ func handleHealth(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func openBrowser(url string) {
-	var c *exec.Cmd
-	switch runtime.GOOS {
-	case "darwin":
-		c = exec.Command("open", url)
-	case "windows":
-		c = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
-	default:
-		c = exec.Command("xdg-open", url)
-	}
-	_ = c.Start()
-}
-
 func withLog(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
@@ -265,7 +250,6 @@ func withLog(h http.HandlerFunc) http.HandlerFunc {
 func main() {
 	addr := flag.String("addr", "127.0.0.1:8099", "监听地址")
 	showVersion := flag.Bool("version", false, "打印版本后退出")
-	openUI := flag.Bool("open", false, "启动后自动打开浏览器")
 	flag.Parse()
 
 	if *showVersion {
@@ -308,14 +292,8 @@ func main() {
 		ReadHeaderTimeout: 5 * time.Second,
 		WriteTimeout:      60 * time.Second,
 	}
-	url := "http://" + strings.Replace(*addr, "0.0.0.0", "127.0.0.1", 1)
-	log.Printf("bunny-dsp %s — %s", version, url)
-	if *openUI {
-		go func() {
-			time.Sleep(400 * time.Millisecond)
-			openBrowser(url)
-		}()
-	}
+	host := strings.Replace(*addr, "0.0.0.0", "127.0.0.1", 1)
+	log.Printf("bunny-dsp %s — 打开浏览器访问 http://%s", version, host)
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

@@ -41,7 +41,7 @@ systemctl --user daemon-reload
 
 if [[ "${NO_START:-0}" != "1" ]]; then
   systemctl --user enable --now bunny-dsp.service
-  info "服务已启动：http://127.0.0.1:$PORT"
+  info "服务已启动。浏览器打开 http://127.0.0.1:$PORT"
 else
   info "已安装（未启动）。手动启动：systemctl --user start bunny-dsp"
 fi

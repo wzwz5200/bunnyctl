@@ -10,9 +10,9 @@ all: build
 build:
 	CGO_ENABLED=0 go build -trimpath -ldflags "$(LDFLAGS)" -o $(BINARY) .
 
-## run: 编译并启动，自动打开浏览器
+## run: 前台编译并启动（不开浏览器，自己访问打印出来的地址）
 run: build
-	./$(BINARY) -open
+	./$(BINARY)
 
 ## test: 单元测试
 test:
