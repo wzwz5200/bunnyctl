@@ -298,7 +298,7 @@ func main() {
 		WriteTimeout:      60 * time.Second,
 	}
 	host := strings.Replace(*addr, "0.0.0.0", "127.0.0.1", 1)
-	log.Printf("usagi %s — 打开浏览器访问 http://%s", version, host)
+	log.Printf("bunnyctl %s — 打开浏览器访问 http://%s", version, host)
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}

@@ -3,7 +3,7 @@
 > 实测设备：`31b2:1112`，固件 `1.0.1`（2024-09-04 构建），序列号 `202409092017`
 > 平台：KTMicro（昆腾微）Helios 系 USB Audio DSP，与 KT02H20 / KT0211L 同一寄存器布局
 
-这是 [usagi](../README.md) 的协议底稿：本文所有结论都来自在真机上反复读写的实测，
+这是 [bunnyctl](../README.md) 的协议底稿：本文所有结论都来自在真机上反复读写的实测，
 以及厂商 Windows 工具（KT_USB_APP / KT_BOOT_TOOL）的静态分析。
 
 **为什么会有这份文档**：BUNNY DSP 的调音依赖官方 App，而官方只提供
@@ -177,7 +177,7 @@ flash.bin  262144 字节
 ./tools/ktdsp.py eq --plot dac.svg          # 画当前 EQ 的幅频响应
 ```
 
-`usagi`（本仓库，Web 调音台）：
+`bunnyctl`（本仓库，Web 调音台）：
 
 ```bash
 make run   # http://127.0.0.1:8099
@@ -190,7 +190,7 @@ make run   # http://127.0.0.1:8099
 ./tools/ktdump.py -o flash.bin              # 全片 256 KiB，可断点续传
 ```
 
-访问权限：已写入 `/etc/udev/rules.d/99-usagi.rules`，给 `31b2:*` 的 hidraw 加了 `plugdev` 组权限和 `/dev/usagi` 软链接，普通用户可直连。
+访问权限：已写入 `/etc/udev/rules.d/99-bunnyctl.rules`，给 `31b2:*` 的 hidraw 加了 `plugdev` 组权限和 `/dev/bunnyctl` 软链接，普通用户可直连。
 
 ## 8. 安全边界
 

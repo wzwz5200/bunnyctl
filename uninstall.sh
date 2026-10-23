@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BIN_NAME="usagi"
+BIN_NAME="bunnyctl"
 PREFIX="${PREFIX:-$HOME/.local}"
 UNIT_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
-UDEV_RULE="/etc/udev/rules.d/99-usagi.rules"
+UDEV_RULE="/etc/udev/rules.d/99-bunnyctl.rules"
 
 info() { printf '\033[1;36m==>\033[0m %s\n' "$*"; }
 
-if systemctl --user list-unit-files 2>/dev/null | grep -q '^usagi.service'; then
+if systemctl --user list-unit-files 2>/dev/null | grep -q '^bunnyctl.service'; then
   info "停止并禁用服务"
-  systemctl --user disable --now usagi.service || true
+  systemctl --user disable --now bunnyctl.service || true
 fi
 
 info "删除 systemd 单元"
-rm -f "$UNIT_DIR/usagi.service"
+rm -f "$UNIT_DIR/bunnyctl.service"
 systemctl --user daemon-reload 2>/dev/null || true
 
 info "删除二进制"

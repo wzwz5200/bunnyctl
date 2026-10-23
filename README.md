@@ -1,4 +1,4 @@
-# usagi · 兔几调音台
+# bunnyctl · 兔几调音台
 
 **在 Linux 上给 TANCHJIM BUNNY DSP 调音。** 浏览器里拖 5 段参数均衡，实时写进耳机，
 一键固化到耳机自己的 flash —— 换台电脑、换台手机插上，还是这套声音。
@@ -36,12 +36,12 @@ TANCHJIM（天使吉米）的 BUNNY（兔几）有一条 USB-C「DSP 版」，�
 需要：**Linux** + **Go 1.22+** + 一条能用的 USB 数据线（很多线只供电，不行就换一条）。
 
 ```bash
-git clone <this-repo> usagi
-cd usagi
+git clone <this-repo> bunnyctl
+cd bunnyctl
 ./install.sh
 ```
 
-安装脚本会：编译 → 装到 `~/.local/bin/usagi` → 装 udev 规则（需要 sudo）→
+安装脚本会：编译 → 装到 `~/.local/bin/bunnyctl` → 装 udev 规则（需要 sudo）→
 装并启动 systemd 用户服务，最后打印访问地址：
 
 ```
@@ -54,8 +54,8 @@ cd usagi
 更新代码后重新跑一次 `./install.sh` 会自动重启服务、换上新二进制。
 
 ```bash
-systemctl --user status usagi     # 运行状态
-journalctl --user -u usagi -f     # 日志
+systemctl --user status bunnyctl     # 运行状态
+journalctl --user -u bunnyctl -f     # 日志
 ./uninstall.sh                    # 卸载
 ```
 
@@ -68,17 +68,17 @@ make run     # 编译并在前台启动，自己访问打印出来的地址
 首次运行若报无权限读 `/dev/hidraw*`，手动装一次 udev 规则：
 
 ```bash
-sudo install -m 0644 99-usagi.rules /etc/udev/rules.d/
+sudo install -m 0644 99-bunnyctl.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules && sudo udevadm trigger --subsystem-match=hidraw
 ```
 
 ### 手动构建
 
 ```bash
-make build                              # 产出 ./usagi
-./usagi                                 # 默认 127.0.0.1:8099
-./usagi -addr 0.0.0.0:8099              # 局域网可访问
-./usagi -version
+make build                              # 产出 ./bunnyctl
+./bunnyctl                                 # 默认 127.0.0.1:8099
+./bunnyctl -addr 0.0.0.0:8099              # 局域网可访问
+./bunnyctl -version
 ```
 
 ## 怎么用
@@ -126,7 +126,7 @@ make build                              # 产出 ./usagi
 | 未连接，`/dev/hidraw*` 权限不足 | 装 udev 规则（见上），或 `sudo usermod -aG plugdev $USER` 后重新登录 |
 | 找不到设备 | `lsusb \| grep 31b2` 确认插入；换条数据线 |
 | 设备卡死不响应 | 拔插一次；`0x08` 读非 4 字节对齐地址会让固件挂起（本工具不会这么做） |
-| 端口被占用 | `./usagi -addr 127.0.0.1:8100` |
+| 端口被占用 | `./bunnyctl -addr 127.0.0.1:8100` |
 | 保存后页面短暂断开 | 正常，`0x53` 会让设备重启，服务会自动重连 |
 
 ## 架构
@@ -154,7 +154,7 @@ make build                              # 产出 ./usagi
 ├── tools/ktdsp.py       命令行调音（不依赖 Web UI）
 ├── tools/ktdump.py      固件整片备份
 ├── install.sh           安装器
-├── 99-usagi.rules       udev 规则
+├── 99-bunnyctl.rules       udev 规则
 └── docs/PROTOCOL.md     协议与寄存器地图
 ```
 
@@ -196,7 +196,7 @@ make fmt      # gofmt
 
 ```bash
 firefox --headless --marionette --profile /tmp/ffp about:blank &
-./usagi &
+./bunnyctl &
 python3 test_ui.py
 ```
 
